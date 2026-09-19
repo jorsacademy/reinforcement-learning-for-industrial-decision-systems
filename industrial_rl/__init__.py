@@ -45,6 +45,13 @@ __all__ = [
     "PessimisticFQIConfig",
     "PessimisticTabularFQI",
     "generate_inventory_dataset",
+    "PrimalDualPPOAgent",
+    "PrimalDualPPOConfig",
+    "SafeWorkforceConfig",
+    "SafeWorkforceEnv",
+    "constrained_expected_workload_policy",
+    "evaluate_safe_workforce_policy",
+    "shield_action",
 ]
 
 from .safe_workforce import (
