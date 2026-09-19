@@ -372,6 +372,43 @@ python experiments/offline_inventory_cql.py
 
 See [`docs/offline_rl_operations.md`](docs/offline_rl_operations.md).
 
+### 11. Offline dynamic production scheduling from historical dispatch logs
+
+This benchmark moves offline RL from inventory replenishment into dynamic shop-floor dispatching.
+
+Jobs arrive over time with due dates, processing times, product families, and tardiness weights. Family changes create setup/changeover time.
+
+The learned action is a dispatch rule rather than a changing job identifier:
+
+```text
+EDD
+SPT
+Setup-aware
+ATC
+```
+
+Compared methods:
+
+- EDD;
+- SPT;
+- setup-aware dispatch;
+- ATC;
+- deterministic state-dependent historical planner;
+- neural behavior cloning from historical dispatch logs;
+- offline CQL-style dispatch-rule selector;
+- two-step current-information scheduling lookahead.
+
+Reported KPIs are weighted tardiness, setup time, mean flow time, on-time completion, mean objective, and p90 objective.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/offline_dynamic_scheduling.py
+```
+
+See [`docs/offline_dynamic_scheduling.md`](docs/offline_dynamic_scheduling.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -561,7 +598,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── safe_workforce.py
 │   ├── risk_inventory.py
 │   ├── pomdp_maintenance.py
-│   └── offline_neural.py
+│   ├── offline_neural.py
+│   └── offline_scheduling.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -572,7 +610,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── safe_workforce_ppo.py
 │   ├── risk_aware_inventory.py
 │   ├── pomdp_maintenance.py
-│   └── offline_inventory_cql.py
+│   ├── offline_inventory_cql.py
+│   └── offline_dynamic_scheduling.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -582,6 +621,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── risk_aware_inventory.md
 │   ├── pomdp_maintenance.md
 │   ├── offline_rl_operations.md
+│   ├── offline_dynamic_scheduling.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
