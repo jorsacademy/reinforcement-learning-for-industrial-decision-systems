@@ -364,6 +364,26 @@ The short CI SAC run improves substantially over constant-rate production and el
 
 These numbers validate the continuous-action SAC training and evaluation mechanics. They are not a converged algorithm ranking or a real-world energy-savings claim.
 
+## Phase 3 constrained-safe RL smoke result
+
+GitHub Actions run `35432801451` completed successfully with **23 passing tests** and the full benchmark suite.
+
+Service-constrained workforce allocation:
+
+```text
+method                   econ cost   p90 cost  viol periods      gap   any viol  mean flex   shield
+No flex                     90.325    162.080        10.936    6.936      1.000      0.000    0.000
+Constrained expected        59.018     78.400         6.620    2.620      1.000      1.590    0.000
+Primal-dual PPO             91.013    104.600         6.744    2.744      0.940      3.000    0.000
+PPO + safety shield         77.756     86.440         3.784   -0.216      0.916      2.710    0.316
+```
+
+The declared constraint budget is `4.0` violation periods per 12-period episode. The raw primal-dual PPO policy does **not** satisfy that budget in the CI smoke run. The safety shield reduces the mean violation count below the budget, but it intervenes on **31.6%** of decisions. Constraint satisfaction therefore cannot be attributed to the learned policy alone.
+
+The episode-level probability of at least one violation remains high even for the shielded policy. This is consistent with the benchmark definition: the constraint controls expected cumulative violation periods, not a chance constraint requiring violation-free episodes.
+
+The original 1.5-period budget was tested first and rejected because none of the benchmarked policies could satisfy it under the declared stochastic workload and flex-capacity assumptions. The 4.0-period budget is therefore documented as a feasibility-calibrated synthetic benchmark parameter, not an externally validated service target.
+
 ## Repository structure
 
 ```text
