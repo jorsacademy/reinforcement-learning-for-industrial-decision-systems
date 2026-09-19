@@ -466,3 +466,98 @@ class TabularFQE:
         return -self.initial_value(
             target_policy
         )
+
+
+class ActionSupportGuard:
+    """Deployment guardrail that keeps a target policy inside logged support.
+
+    On states represented in the dataset, an unsupported proposed action is
+    replaced by the most frequently observed feasible action. On states with
+    no logged action support, the supplied fallback policy is used.
+    """
+
+    def __init__(
+        self,
+        base_policy: Callable[[int, int], int],
+        fallback_policy: Callable[[int, int], int],
+        dataset: tuple[OfflineTransition, ...],
+        env: InventoryEnv,
+        *,
+        min_count: int = 1,
+    ):
+        if min_count < 1:
+            raise ValueError("min_count must be positive")
+        self.base_policy = base_policy
+        self.fallback_policy = fallback_policy
+        self.env = env
+        self.min_count = int(min_count)
+        self.counts = np.zeros(
+            (env.n_states, env.n_actions),
+            dtype=int,
+        )
+        for row in dataset:
+            self.counts[
+                int(row.state),
+                int(row.action),
+            ] += 1
+        self.decisions = 0
+        self.interventions = 0
+
+    def __call__(
+        self,
+        t: int,
+        inventory: int,
+    ) -> int:
+        state = self.env.state_index(
+            int(t),
+            int(inventory),
+        )
+        feasible = self.env.feasible_actions(
+            int(inventory)
+        )
+        proposed = int(
+            self.base_policy(
+                int(t),
+                int(inventory),
+            )
+        )
+        self.decisions += 1
+
+        if (
+            proposed in feasible
+            and self.counts[state, proposed]
+            >= self.min_count
+        ):
+            return proposed
+
+        supported = feasible[
+            self.counts[state, feasible]
+            >= self.min_count
+        ]
+        self.interventions += 1
+
+        if len(supported) > 0:
+            counts = self.counts[
+                state,
+                supported,
+            ]
+            return int(
+                supported[int(np.argmax(counts))]
+            )
+
+        fallback = int(
+            self.fallback_policy(
+                int(t),
+                int(inventory),
+            )
+        )
+        if fallback in feasible:
+            return fallback
+        return int(feasible[-1])
+
+    @property
+    def intervention_rate(self) -> float:
+        return float(
+            self.interventions
+            / max(self.decisions, 1)
+        )
