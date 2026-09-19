@@ -7,7 +7,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v5
@@ -51,3 +51,6 @@ jobs:
 
       - name: Risk-aware inventory smoke
         run: python experiments/risk_aware_inventory.py --smoke
+
+      - name: POMDP maintenance smoke
+        run: python experiments/pomdp_maintenance.py --smoke
