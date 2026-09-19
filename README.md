@@ -359,9 +359,10 @@ Compared methods:
 - neural behavior cloning;
 - discrete Conservative Q-Learning;
 - discrete Implicit Q-Learning;
+- CQL/IQL behind a logged-support behavior-policy fallback guardrail;
 - exact dynamic programming as a model-advantaged reference.
 
-The benchmark reports state/state-action coverage, behavior entropy, unsupported policy action rate, FQE estimated cost, and held-out simulator KPIs.
+The benchmark reports state/state-action coverage, behavior entropy, unsupported policy action rate, support-guardrail behavior, FQE estimated cost when support is adequate, and held-out simulator KPIs.
 
 Run:
 
