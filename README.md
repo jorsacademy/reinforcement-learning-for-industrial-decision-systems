@@ -249,6 +249,34 @@ The offline learner was fitted from `14,400` logged transitions. It improves mod
 
 These values are reproducible consequences of the declared synthetic models, seeds, costs, and horizons. They are not real-world savings claims.
 
+## Phase 2 GitHub Actions smoke results
+
+GitHub Actions run `35431042413` completed successfully with **16 passing tests** and both neural end-to-end smoke experiments.
+
+Regime-switching inventory:
+
+```text
+method                  mean cost    p90 cost   fill rate    stockout
+Exact regime-DP            161.734     190.310      0.9735      0.0845
+Regime base-stock          218.385     249.155      1.0000      0.0000
+DQN                        185.969     239.135      0.8928      0.2343
+```
+
+The exact Bellman value from the declared initial state is `162.440`. The short CI DQN training run improves modeled mean cost relative to the conservative regime base-stock baseline, but remains materially worse than exact DP and shows weaker service metrics. This is a smoke-validation result, not a tuned DQN benchmark.
+
+Dynamic workforce allocation:
+
+```text
+method                    mean cost    p90 cost   mean flex   final backlog
+No flex workers             1627.612    2116.200       0.000         41.212
+Myopic expected-cost         283.804     465.300       2.833          3.664
+PPO                          483.308     830.100       3.000         10.380
+```
+
+The short CI PPO run learns a policy that is far better than doing nothing, but it does **not** beat the explicit expected-cost allocation rule. The result is intentionally retained: neural RL does not receive a positive conclusion simply because it trains successfully.
+
+These Phase 2 numbers validate the full neural training/inference/evaluation mechanics under a deliberately small CI budget. They are not presented as converged algorithm rankings or real industrial savings.
+
 ## Repository structure
 
 ```text
