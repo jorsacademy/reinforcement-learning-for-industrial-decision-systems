@@ -99,13 +99,28 @@ class LearnedDynamicsEnsemble:
         if any(v is None for v in (self.x_mean, self.x_std, self.y_mean, self.y_std)):
             raise RuntimeError("dynamics ensemble is not fitted")
 
-    @torch.no_grad()
-    def predict_members(self, states: torch.Tensor, actions: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    def _normalized_input(self, states: torch.Tensor, actions: torch.Tensor) -> torch.Tensor:
         self._check_fitted()
         if actions.ndim == 1:
             actions = actions[:, None]
         x = torch.cat([states, actions], dim=-1)
-        x_n = (x - self.x_mean) / self.x_std
+        return (x - self.x_mean) / self.x_std
+
+    @torch.no_grad()
+    def predict_member(
+        self,
+        member_index: int,
+        states: torch.Tensor,
+        actions: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x_n = self._normalized_input(states, actions)
+        y_n = self.members[int(member_index)](x_n)
+        y = y_n * self.y_std + self.y_mean
+        return y[..., : self.state_dim], y[..., self.state_dim]
+
+    @torch.no_grad()
+    def predict_members(self, states: torch.Tensor, actions: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        x_n = self._normalized_input(states, actions)
         preds = []
         for model in self.members:
             y_n = model(x_n)
@@ -171,9 +186,7 @@ def cem_mpc_policy(
                 cumulative = torch.zeros(config.candidates)
                 for h in range(config.horizon):
                     actions = torch.as_tensor(seq[:, h], dtype=torch.float32)
-                    next_all, reward_all = model.predict_members(states, actions)
-                    next_state = next_all[m]
-                    reward = reward_all[m]
+                    next_state, reward = model.predict_member(m, states, actions)
                     cumulative = cumulative + reward
                     states = torch.clamp(next_state, -3.0, 3.0)
                 member_scores[m] = cumulative.numpy()
