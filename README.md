@@ -393,6 +393,7 @@ Compared methods:
 - SPT;
 - setup-aware dispatch;
 - ATC;
+- deterministic state-dependent historical planner;
 - neural behavior cloning from historical dispatch logs;
 - offline CQL-style dispatch-rule selector;
 - two-step current-information scheduling lookahead.
