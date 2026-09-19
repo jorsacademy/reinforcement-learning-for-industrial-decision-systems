@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reinforcement-learning-for-industrial-decision-systems"
+version = "0.1.0"
+description = "Transparent RL-versus-OR benchmarks for industrial decision systems."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+]
+
+[tool.setuptools.packages.find]
+include = ["industrial_rl*"]
