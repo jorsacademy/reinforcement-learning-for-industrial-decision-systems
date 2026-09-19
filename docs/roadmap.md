@@ -38,9 +38,15 @@ Implemented:
 - safety shield / action repair based on expected next-period backlog;
 - shield intervention rate reported separately from raw policy quality.
 
+Implemented risk-aware extension:
+
+- empirical VaR/CVaR reporting for rare-demand inventory;
+- mean-optimal versus CVaR-optimal base-stock policy search;
+- tail-weighted PPO as a transparent worst-episode training heuristic.
+
 Remaining:
 
-- chance-constrained or CVaR-aware evaluation;
+- formal chance-constrained policy optimization;
 - continuous-action constrained RL for production/energy systems;
 - stronger statistical validation of constraint satisfaction across training seeds.
 
