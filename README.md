@@ -209,6 +209,39 @@ python experiments/workforce_ppo.py
 
 See [`docs/neural_rl_ie.md`](docs/neural_rl_ie.md) for the Phase 2 methodology and limitations.
 
+### 6. Energy-aware production with SAC
+
+This benchmark introduces continuous operational decisions.
+
+State:
+
+```text
+period + net inventory/backlog + expected demand + electricity price + previous production rate
+```
+
+Action:
+
+```text
+continuous production rate
+```
+
+The cost function combines energy expenditure, holding/backlog, production-rate ramping, and boundary penalties.
+
+Compared methods:
+
+- constant-rate production;
+- three-step deterministic MPC-like grid search using expected demand and future prices;
+- Soft Actor-Critic (SAC) with a tanh-Gaussian actor, twin critics, replay buffer, and soft target updates.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/energy_production_sac.py
+```
+
+This is an operations-planning benchmark, not low-level actuator/process control. See [`docs/energy_aware_production.md`](docs/energy_aware_production.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -288,17 +321,20 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── offline.py
 │   ├── dqn_inventory.py
 │   ├── neural_common.py
-│   └── ppo_workforce.py
+│   ├── ppo_workforce.py
+│   └── sac_energy.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
 │   ├── offline_inventory.py
 │   ├── neural_inventory_dqn.py
-│   └── workforce_ppo.py
+│   ├── workforce_ppo.py
+│   └── energy_production_sac.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
 │   ├── neural_rl_ie.md
+│   ├── energy_aware_production.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
