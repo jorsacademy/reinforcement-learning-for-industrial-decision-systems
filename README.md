@@ -545,3 +545,46 @@ See:
 ## Scope
 
 This is an educational and research benchmark suite, not a production control system. A production deployment would require validated process models, calibrated costs, operational data governance, monitoring, fallback logic, safety review, and integration with the relevant planning/MES/ERP/control systems.
+
+## Advanced neural-control extensions
+
+Three additional benchmarks fill representation and generalization gaps that are distinct from the repository's existing DQN/PPO/SAC/offline-RL experiments.
+
+### Model-based control with learned dynamics
+
+`industrial_rl/model_based_control.py` fits a bootstrap neural dynamics ensemble from transition data and uses uncertainty-penalized Cross-Entropy Method planning at decision time. It creates a direct learned-model comparison against the existing known-model MPC and model-free RL paths.
+
+Run:
+
+```bash
+python experiments/model_based_production_control.py
+```
+
+Methodology: [`docs/model_based_rl.md`](docs/model_based_rl.md).
+
+### Transfer RL and domain randomization
+
+`industrial_rl/transfer_control.py` defines a source factory, a shifted target factory, limited-budget target fine-tuning, same-budget training from scratch, and domain-randomized training. The experiment therefore separates zero-shot transfer from adaptation and controls for target-data budget.
+
+Run:
+
+```bash
+python experiments/transfer_domain_randomization.py
+```
+
+Methodology: [`docs/transfer_rl.md`](docs/transfer_rl.md).
+
+### Autoencoder latent-state control
+
+`industrial_rl/latent_state_control.py` maps the compact process state into a redundant high-dimensional sensor representation, learns an autoencoder bottleneck, and compares raw-sensor versus latent policies distilled from the same MPC teacher. Closed-loop operating cost is reported in addition to reconstruction and imitation error.
+
+Run:
+
+```bash
+python experiments/latent_state_control.py
+```
+
+Methodology: [`docs/latent_state_control.md`](docs/latent_state_control.md).
+
+These extensions use the existing `.[neural]` dependency set. They are intended to answer whether learned dynamics, transfer, domain randomization, or latent representations improve downstream decisions; none of the methods is assumed to dominate the OR/control baselines.
+
