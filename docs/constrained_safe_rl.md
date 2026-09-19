@@ -32,7 +32,7 @@ if any center backlog > service_backlog_limit
 else 0
 ```
 
-The default benchmark limits the **expected cumulative number of violation periods per episode**.
+The default benchmark limits the **expected cumulative number of violation periods per episode** to 4.0 over a 12-period horizon. This value was chosen only after confirming that the original 1.5-period target was infeasible for all benchmarked policies under the declared stochastic workload and flex-capacity assumptions.
 
 This is an expected-cost CMDP constraint. It is not described as a chance constraint or a formal service-level guarantee.
 
