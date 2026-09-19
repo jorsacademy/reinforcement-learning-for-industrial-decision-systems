@@ -425,22 +425,45 @@ def evaluate_scheduling_policy(
     }
 
 
+def historical_contextual_action(
+    env: DynamicDispatchEnv,
+    rng: np.random.Generator,
+    *,
+    exploration: float = 0.18,
+) -> int:
+    """Noisy state-dependent planner used to generate historical logs."""
+    if not 0.0 <= exploration <= 1.0:
+        raise ValueError("exploration must be in [0,1]")
+    if rng.random() < exploration:
+        return int(rng.integers(0, env.n_actions))
+
+    state = env.state_vector()
+    overdue_ratio = float(state[4])
+    same_family_ratio = float(state[5])
+    weighted_urgency = float(state[7])
+    min_slack_scaled = float(state[3])
+    queue_fraction = float(state[0])
+
+    if overdue_ratio >= 0.18 or weighted_urgency >= 0.12:
+        return ATC
+    if (
+        env.machine_family >= 0
+        and same_family_ratio >= 0.45
+        and queue_fraction >= 0.08
+    ):
+        return SETUP_AWARE
+    if min_slack_scaled <= 0.12:
+        return EDD
+    return SPT
+
+
 def generate_scheduling_dataset(
     config: SchedulingConfig = SchedulingConfig(),
     *,
     episodes: int = 600,
     seed: int = 185_000,
-    behavior_probs: tuple[float, float, float, float] = (
-        0.10,
-        0.08,
-        0.17,
-        0.65,
-    ),
+    exploration: float = 0.18,
 ) -> tuple[SchedulingTransition, ...]:
-    probs = np.asarray(behavior_probs, dtype=float)
-    if probs.shape != (4,) or np.any(probs < 0) or not np.isclose(probs.sum(), 1.0):
-        raise ValueError("behavior_probs must be a probability vector over four actions")
-
     rows = []
     rng = np.random.default_rng(seed)
 
@@ -449,7 +472,11 @@ def generate_scheduling_dataset(
         state = env.reset(seed=seed + ep)
         done = False
         while not done:
-            action = int(rng.choice(4, p=probs))
+            action = historical_contextual_action(
+                env,
+                rng,
+                exploration=exploration,
+            )
             next_state, reward, done, _ = env.step(action)
             rows.append(
                 SchedulingTransition(
