@@ -58,6 +58,30 @@ class OfflineNeuralInventoryCoreTests(unittest.TestCase):
         self.assertTrue(0.0 < m["state_action_coverage"] <= 1.0)
         self.assertGreaterEqual(m["mean_behavior_entropy"], 0.0)
 
+
+    def test_support_guardrail_eliminates_logged_state_support_violations(self):
+        from industrial_rl.offline_neural_inventory import (
+            support_guardrail_policy,
+            unsupported_policy_action_rate,
+        )
+
+        def unsupported_candidate(t, inventory, regime):
+            del t, regime
+            return min(self.config.max_order, self.config.max_inventory - inventory)
+
+        guarded = support_guardrail_policy(
+            self.dataset,
+            unsupported_candidate,
+            self.behavior,
+        )
+        self.assertEqual(
+            unsupported_policy_action_rate(
+                self.dataset,
+                guarded,
+            ),
+            0.0,
+        )
+
     def test_fqe_behavior_policy_is_finite(self):
         from industrial_rl.offline_neural_inventory import tabular_fqe
 
