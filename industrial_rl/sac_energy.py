@@ -484,8 +484,8 @@ class SACEnergyAgent:
                 dtype=np.float32,
             )
             with torch.no_grad():
-                _, _, mean_action = self.actor(
-                    torch.as_tensor(obs).unsqueeze(0)
+                _, _, mean_action = self.actor.sample(
+                    torch.as_tensor(obs, dtype=torch.float32).unsqueeze(0)
                 )
             return self._scaled_env_action(float(mean_action.item()))
 
