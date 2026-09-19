@@ -7,7 +7,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 55
 
     steps:
       - uses: actions/checkout@v5
@@ -57,3 +57,6 @@ jobs:
 
       - name: Offline CQL-style inventory smoke
         run: python experiments/offline_inventory_cql.py --smoke
+
+      - name: Offline shop-floor scheduling smoke
+        run: python experiments/offline_shopfloor_scheduling.py --smoke
