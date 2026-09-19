@@ -372,6 +372,42 @@ python experiments/offline_inventory_cql.py
 
 See [`docs/offline_rl_operations.md`](docs/offline_rl_operations.md).
 
+### 11. Offline dynamic shop-floor scheduling
+
+This benchmark moves offline RL from replenishment decisions into production dispatching.
+
+Shop-floor model:
+
+```text
+stochastic job arrivals
++ due dates
++ priority weights
++ processing times
++ product families
++ sequence-dependent setup time
+```
+
+At each dispatch epoch the policy selects one rule:
+
+```text
+FIFO / EDD / SPT / ATC
+```
+
+Compared methods include all four fixed rules, a historical legacy selector, neural behavior cloning, CQL-style offline rule selection, a behavior-support guardrail, and rolling-horizon local permutation search.
+
+The offline learners train only from fixed historical dispatch transitions. Neural FQE is run before held-out simulator evaluation.
+
+This is deliberately different from the separate online JSSP and automotive paint-shop PPO repositories: the learned scheduling selector receives no online exploration during fitting.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/offline_shopfloor_scheduling.py
+```
+
+See [`docs/offline_shopfloor_scheduling.md`](docs/offline_shopfloor_scheduling.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -561,7 +597,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── safe_workforce.py
 │   ├── risk_inventory.py
 │   ├── pomdp_maintenance.py
-│   └── offline_neural.py
+│   ├── offline_neural.py
+│   └── offline_scheduling.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -572,7 +609,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── safe_workforce_ppo.py
 │   ├── risk_aware_inventory.py
 │   ├── pomdp_maintenance.py
-│   └── offline_inventory_cql.py
+│   ├── offline_inventory_cql.py
+│   └── offline_shopfloor_scheduling.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -582,6 +620,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── risk_aware_inventory.md
 │   ├── pomdp_maintenance.md
 │   ├── offline_rl_operations.md
+│   ├── offline_shopfloor_scheduling.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml

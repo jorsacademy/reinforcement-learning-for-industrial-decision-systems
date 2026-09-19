@@ -74,11 +74,20 @@ Implemented:
 - target-policy support reporting;
 - Fitted Q Evaluation (FQE) from logged transitions before simulator testing.
 
+Additional implemented scheduling extension:
+
+- dynamic shop-floor dispatch logs with stochastic arrivals, due dates, priorities, and family setups;
+- offline behavior cloning and CQL-style rule selection;
+- behavior-probability support guardrails;
+- neural FQE before simulator testing;
+- fixed FIFO/EDD/SPT/ATC baselines;
+- rolling-horizon local permutation search as a model-based scheduling reference.
+
 Remaining:
 
 - IQL-style offline policy learning;
 - richer off-policy evaluation diagnostics;
-- offline RL on scheduling or maintenance logs;
+- offline RL on maintenance intervention logs;
 - dataset-shift and behavior-policy sensitivity studies.
 
 ## Phase 5 — model-based and hybrid decision systems
@@ -94,5 +103,5 @@ Remaining:
 - predictive maintenance with partial observability — implemented;
 - energy-aware production;
 - dynamic workforce/capacity allocation;
-- rolling-horizon scheduling with stochastic arrivals;
+- rolling-horizon scheduling with stochastic arrivals — implemented as an offline-log benchmark;
 - hybrid RL + OR decision systems.
