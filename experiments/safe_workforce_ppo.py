@@ -24,7 +24,7 @@ def main():
 
     config = SafeWorkforceConfig(
         service_backlog_limit=4,
-        expected_violation_budget=1.5,
+        expected_violation_budget=4.0,
         soft_backlog_cost=0.20,
     )
 
