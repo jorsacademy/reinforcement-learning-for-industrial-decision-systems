@@ -80,6 +80,7 @@ __all__ = [
     "discretized_belief_policy",
     "evaluate_maintenance_policy",
     "reactive_sensor_policy",
+    "ActionSupportGuard",
     "ConservativeOfflineConfig",
     "ConservativeOfflineDQN",
     "FQEConfig",
@@ -133,6 +134,7 @@ from .pomdp_maintenance import (
 )
 
 from .offline_neural import (
+    ActionSupportGuard,
     ConservativeOfflineConfig,
     ConservativeOfflineDQN,
     FQEConfig,
