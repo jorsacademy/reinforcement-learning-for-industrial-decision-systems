@@ -337,6 +337,42 @@ python experiments/pomdp_maintenance.py
 
 See [`docs/pomdp_maintenance.md`](docs/pomdp_maintenance.md).
 
+### 10. Neural offline RL from historical inventory logs
+
+This benchmark models an industrial setting where online exploration is not allowed.
+
+A regime-aware replenishment policy generates a fixed historical operations log. After that point:
+
+```text
+Behavior Cloning
+CQL
+IQL
+coverage diagnostics
+Fitted Q Evaluation
+```
+
+operate only on the logged transition table. The simulator is used again only after each learned policy is frozen.
+
+Compared methods:
+
+- original behavior policy;
+- neural behavior cloning;
+- discrete Conservative Q-Learning;
+- discrete Implicit Q-Learning;
+- CQL/IQL behind a logged-support behavior-policy fallback guardrail;
+- exact dynamic programming as a model-advantaged reference.
+
+The benchmark reports state/state-action coverage, behavior entropy, unsupported policy action rate, support-guardrail behavior, FQE estimated cost when support is adequate, and held-out simulator KPIs.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/offline_neural_inventory.py
+```
+
+See [`docs/offline_neural_inventory.md`](docs/offline_neural_inventory.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -499,7 +535,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── sac_energy.py
 │   ├── safe_workforce.py
 │   ├── risk_inventory.py
-│   └── pomdp_maintenance.py
+│   ├── pomdp_maintenance.py
+│   └── offline_neural_inventory.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -509,7 +546,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── energy_production_sac.py
 │   ├── safe_workforce_ppo.py
 │   ├── risk_aware_inventory.py
-│   └── pomdp_maintenance.py
+│   ├── pomdp_maintenance.py
+│   └── offline_neural_inventory.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -518,6 +556,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── constrained_safe_rl.md
 │   ├── risk_aware_inventory.md
 │   ├── pomdp_maintenance.md
+│   ├── offline_neural_inventory.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml

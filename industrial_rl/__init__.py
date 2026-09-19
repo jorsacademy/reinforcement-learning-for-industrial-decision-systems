@@ -80,6 +80,19 @@ __all__ = [
     "discretized_belief_policy",
     "evaluate_maintenance_policy",
     "reactive_sensor_policy",
+    "CQLConfig",
+    "DiscreteCQL",
+    "DiscreteIQL",
+    "IQLConfig",
+    "LoggedRegimeTransition",
+    "NeuralBehaviorCloning",
+    "OfflineBCConfig",
+    "dataset_coverage",
+    "discrete_state_id",
+    "generate_regime_inventory_logs",
+    "support_guardrail_policy",
+    "tabular_fqe",
+    "unsupported_policy_action_rate",
 ]
 
 from .safe_workforce import (
@@ -124,4 +137,20 @@ from .pomdp_maintenance import (
     discretized_belief_policy,
     evaluate_maintenance_policy,
     reactive_sensor_policy,
+)
+
+from .offline_neural_inventory import (
+    CQLConfig,
+    DiscreteCQL,
+    DiscreteIQL,
+    IQLConfig,
+    LoggedRegimeTransition,
+    NeuralBehaviorCloning,
+    OfflineBCConfig,
+    dataset_coverage,
+    discrete_state_id,
+    generate_regime_inventory_logs,
+    support_guardrail_policy,
+    tabular_fqe,
+    unsupported_policy_action_rate,
 )

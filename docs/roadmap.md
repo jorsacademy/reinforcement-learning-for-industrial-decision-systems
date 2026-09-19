@@ -62,13 +62,19 @@ Remaining:
 
 This extends the separate fully observed maintenance MDP project rather than duplicating it.
 
-## Phase 4 — offline RL
+## Phase 4 — offline RL (implemented)
 
-- CQL;
-- IQL;
-- behavior-policy diagnostics;
-- dataset coverage analysis;
-- off-policy evaluation before simulator testing.
+- fixed logged regime-inventory dataset generation;
+- neural behavior cloning;
+- discrete Conservative Q-Learning (CQL);
+- discrete Implicit Q-Learning (IQL);
+- dataset state/state-action coverage diagnostics;
+- empirical behavior-action entropy;
+- unsupported-policy-action diagnostics;
+- tabular fitted-Q evaluation before simulator testing;
+- frozen-policy held-out simulator validation.
+
+The exact dynamic-programming policy is retained only as a model-advantaged reference, not as an offline learner.
 
 ## Phase 5 — model-based and hybrid decision systems
 
