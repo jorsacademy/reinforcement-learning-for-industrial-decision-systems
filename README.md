@@ -209,6 +209,39 @@ python experiments/workforce_ppo.py
 
 See [`docs/neural_rl_ie.md`](docs/neural_rl_ie.md) for the Phase 2 methodology and limitations.
 
+### 6. Energy-aware production with SAC
+
+This benchmark introduces continuous operational decisions.
+
+State:
+
+```text
+period + net inventory/backlog + expected demand + electricity price + previous production rate
+```
+
+Action:
+
+```text
+continuous production rate
+```
+
+The cost function combines energy expenditure, holding/backlog, production-rate ramping, and boundary penalties.
+
+Compared methods:
+
+- constant-rate production;
+- three-step deterministic MPC-like grid search using expected demand and future prices;
+- Soft Actor-Critic (SAC) with a tanh-Gaussian actor, twin critics, replay buffer, and soft target updates.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/energy_production_sac.py
+```
+
+This is an operations-planning benchmark, not low-level actuator/process control. See [`docs/energy_aware_production.md`](docs/energy_aware_production.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -277,6 +310,23 @@ The short CI PPO run learns a policy that is far better than doing nothing, but 
 
 These Phase 2 numbers validate the full neural training/inference/evaluation mechanics under a deliberately small CI budget. They are not presented as converged algorithm rankings or real industrial savings.
 
+## SAC GitHub Actions smoke result
+
+GitHub Actions run `35432095022` completed successfully with **19 passing tests** and the full Phase 1/2 benchmark suite.
+
+Energy-aware production:
+
+```text
+method               mean cost    p90 cost   energy use   final backlog   total ramp
+Constant-rate           334.145     528.380      88.560          0.580        6.000
+3-step MPC grid         104.000     119.142      88.212          0.315       22.733
+SAC                     191.567     195.782     106.082          0.000       16.899
+```
+
+The short CI SAC run improves substantially over constant-rate production and eliminates final backlog in this held-out sample, but it does **not** beat the three-step MPC-style baseline on total cost. SAC also uses more modeled energy than MPC. The result is therefore not framed as an RL win: under the declared synthetic planning model, short-horizon model-based lookahead remains the stronger policy in the CI budget.
+
+These numbers validate the continuous-action SAC training and evaluation mechanics. They are not a converged algorithm ranking or a real-world energy-savings claim.
+
 ## Repository structure
 
 ```text
@@ -288,17 +338,20 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── offline.py
 │   ├── dqn_inventory.py
 │   ├── neural_common.py
-│   └── ppo_workforce.py
+│   ├── ppo_workforce.py
+│   └── sac_energy.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
 │   ├── offline_inventory.py
 │   ├── neural_inventory_dqn.py
-│   └── workforce_ppo.py
+│   ├── workforce_ppo.py
+│   └── energy_production_sac.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
 │   ├── neural_rl_ie.md
+│   ├── energy_aware_production.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
