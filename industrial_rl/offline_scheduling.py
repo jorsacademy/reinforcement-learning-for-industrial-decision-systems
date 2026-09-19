@@ -510,16 +510,14 @@ def evaluate_dispatch_policy(
             state, reward, done, info = env.step(action)
             episode_on_time += int(info["on_time"])
 
-        costs.append(-sum([
-            0.0
-        ]) + (
+        costs.append(
             config.tardiness_weight
             * env.last_metrics["weighted_tardiness"]
             + config.setup_cost_weight
             * env.last_metrics["setup_time"]
             + config.flow_time_weight
             * env.last_metrics["flow_time"]
-        ))
+        )
         tardiness.append(
             env.last_metrics["weighted_tardiness"]
         )
