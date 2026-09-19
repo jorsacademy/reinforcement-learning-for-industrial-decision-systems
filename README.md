@@ -142,6 +142,46 @@ Run:
 python experiments/offline_inventory.py
 ```
 
+## Validated GitHub Actions smoke results
+
+GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
+
+Inventory control:
+
+```text
+method                   mean cost    p90 cost   fill rate    stockout
+Exact DP                    82.797      95.400      0.9589      0.1103
+Base-stock(9)              122.390     130.200      1.0000      0.0000
+Tabular Q-learning          86.131      97.200      0.9702      0.0761
+```
+
+The exact Bellman value from the declared initial state is `82.911`; the Monte Carlo mean for the exact-DP policy is close to that model value. Q-learning approaches the exact policy but does not outperform it.
+
+Constrained capacity allocation:
+
+```text
+method                     mean cost    p90 cost    overtime  violations  final backlog
+Exact budget-DP               47.144      57.800       2.617      0.0000          0.172
+Myopic production             55.130      73.500       2.727      0.0000          0.392
+Lagrangian Q-learning         50.851      59.300       3.523      0.0000          0.179
+```
+
+The exact expected cost from the declared initial state is `47.392`. The learned policy improves on the myopic baseline while remaining feasible, but the exact DP reference remains better.
+
+Offline inventory learning:
+
+```text
+method                       mean cost    p90 cost   fill rate    stockout
+Behavior policy                102.132     109.500      1.0000      0.0000
+Behavior cloning               102.132     109.500      1.0000      0.0000
+Pessimistic offline FQI         89.331     103.600      0.9272      0.1513
+Exact DP reference              83.059      94.400      0.9583      0.1119
+```
+
+The offline learner was fitted from `14,400` logged transitions. It improves modeled cost relative to the behavior policy while remaining below the model-advantaged exact-DP reference.
+
+These values are reproducible consequences of the declared synthetic models, seeds, costs, and horizons. They are not real-world savings claims.
+
 ## Repository structure
 
 ```text
