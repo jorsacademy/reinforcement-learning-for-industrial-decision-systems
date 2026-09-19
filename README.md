@@ -279,6 +279,31 @@ python experiments/safe_workforce_ppo.py
 
 See [`docs/constrained_safe_rl.md`](docs/constrained_safe_rl.md).
 
+### 8. Tail-risk / CVaR-aware inventory control
+
+This benchmark studies rare-demand shocks rather than average cost alone.
+
+Compared methods:
+
+- exact risk-neutral dynamic programming;
+- mean-cost optimized base-stock policy;
+- empirical-CVaR90 optimized base-stock policy;
+- standard mean-focused PPO;
+- tail-weighted PPO that emphasizes worst-cost rollout episodes.
+
+Reported metrics include mean cost, p90/p95 cost, empirical CVaR90, fill rate, and stockout-period rate.
+
+The exact DP reference remains risk-neutral. The tail-weighted PPO method is deliberately not described as an exact CVaR policy-gradient algorithm.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/risk_aware_inventory.py
+```
+
+See [`docs/risk_aware_inventory.md`](docs/risk_aware_inventory.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -397,7 +422,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── neural_common.py
 │   ├── ppo_workforce.py
 │   ├── sac_energy.py
-│   └── safe_workforce.py
+│   ├── safe_workforce.py
+│   └── risk_inventory.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -405,13 +431,15 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── neural_inventory_dqn.py
 │   ├── workforce_ppo.py
 │   ├── energy_production_sac.py
-│   └── safe_workforce_ppo.py
+│   ├── safe_workforce_ppo.py
+│   └── risk_aware_inventory.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
 │   ├── neural_rl_ie.md
 │   ├── energy_aware_production.md
 │   ├── constrained_safe_rl.md
+│   ├── risk_aware_inventory.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
