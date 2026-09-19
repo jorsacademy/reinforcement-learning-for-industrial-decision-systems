@@ -171,6 +171,37 @@ def unsupported_policy_action_rate(
     return float(unsupported / max(len(observed), 1))
 
 
+
+def support_guardrail_policy(
+    dataset: tuple[LoggedRegimeTransition, ...],
+    candidate_policy: Callable[[int, int, int], int],
+    fallback_policy: Callable[[int, int, int], int],
+):
+    """Use the learned action only when that exact state-action pair is logged.
+
+    At unseen states, or when the candidate chooses an unsupported action at a
+    visited state, deployment falls back to the known behavior policy.
+    """
+    observed: dict[tuple[int, int, int], set[int]] = {}
+    for row in dataset:
+        observed.setdefault(
+            (row.t, row.inventory, row.regime),
+            set(),
+        ).add(row.action)
+
+    def choose(t: int, inventory: int, regime: int) -> int:
+        key = (int(t), int(inventory), int(regime))
+        candidate = int(
+            candidate_policy(t, inventory, regime)
+        )
+        if key in observed and candidate in observed[key]:
+            return candidate
+        return int(
+            fallback_policy(t, inventory, regime)
+        )
+
+    return choose
+
 def _arrays(
     dataset: tuple[LoggedRegimeTransition, ...],
 ):
