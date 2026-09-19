@@ -310,6 +310,23 @@ The short CI PPO run learns a policy that is far better than doing nothing, but 
 
 These Phase 2 numbers validate the full neural training/inference/evaluation mechanics under a deliberately small CI budget. They are not presented as converged algorithm rankings or real industrial savings.
 
+## SAC GitHub Actions smoke result
+
+GitHub Actions run `35432095022` completed successfully with **19 passing tests** and the full Phase 1/2 benchmark suite.
+
+Energy-aware production:
+
+```text
+method               mean cost    p90 cost   energy use   final backlog   total ramp
+Constant-rate           334.145     528.380      88.560          0.580        6.000
+3-step MPC grid         104.000     119.142      88.212          0.315       22.733
+SAC                     191.567     195.782     106.082          0.000       16.899
+```
+
+The short CI SAC run improves substantially over constant-rate production and eliminates final backlog in this held-out sample, but it does **not** beat the three-step MPC-style baseline on total cost. SAC also uses more modeled energy than MPC. The result is therefore not framed as an RL win: under the declared synthetic planning model, short-horizon model-based lookahead remains the stronger policy in the CI budget.
+
+These numbers validate the continuous-action SAC training and evaluation mechanics. They are not a converged algorithm ranking or a real-world energy-savings claim.
+
 ## Repository structure
 
 ```text
