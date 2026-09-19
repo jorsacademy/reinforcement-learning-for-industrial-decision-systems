@@ -52,6 +52,15 @@ __all__ = [
     "constrained_expected_workload_policy",
     "evaluate_safe_workforce_policy",
     "shield_action",
+    "RiskInventoryConfig",
+    "RiskInventoryEnv",
+    "RiskPPOConfig",
+    "TailWeightedPPOAgent",
+    "risk_base_stock_policy",
+    "empirical_cvar",
+    "evaluate_risk_inventory_policy",
+    "exact_risk_neutral_dp",
+    "optimize_base_stock_target",
 ]
 
 from .safe_workforce import (
@@ -62,4 +71,16 @@ from .safe_workforce import (
     constrained_expected_workload_policy,
     evaluate_safe_workforce_policy,
     shield_action,
+)
+
+from .risk_inventory import (
+    RiskInventoryConfig,
+    RiskInventoryEnv,
+    RiskPPOConfig,
+    TailWeightedPPOAgent,
+    base_stock_policy as risk_base_stock_policy,
+    empirical_cvar,
+    evaluate_risk_inventory_policy,
+    exact_risk_neutral_dp,
+    optimize_base_stock_target,
 )
