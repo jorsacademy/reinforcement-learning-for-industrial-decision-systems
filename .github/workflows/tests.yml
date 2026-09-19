@@ -54,3 +54,13 @@ jobs:
 
       - name: POMDP maintenance smoke
         run: python experiments/pomdp_maintenance.py --smoke
+
+
+      - name: Model-based control smoke
+        run: python experiments/model_based_production_control.py --smoke
+
+      - name: Transfer and domain-randomization smoke
+        run: python experiments/transfer_domain_randomization.py --smoke
+
+      - name: Latent-state control smoke
+        run: python experiments/latent_state_control.py --smoke
