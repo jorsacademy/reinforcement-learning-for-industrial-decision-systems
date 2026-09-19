@@ -142,6 +142,73 @@ Run:
 python experiments/offline_inventory.py
 ```
 
+### 4. Regime-switching inventory with DQN
+
+This benchmark moves from tabular Q-learning to neural function approximation while retaining an exact reference.
+
+State:
+
+```text
+(period, inventory, observed demand regime)
+```
+
+Action:
+
+```text
+discrete order quantity
+```
+
+Compared methods:
+
+- exact regime-aware dynamic programming;
+- regime-aware base-stock policy;
+- DQN with replay, target network, and feasibility masking.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/neural_inventory_dqn.py
+```
+
+### 5. Dynamic workforce allocation with PPO
+
+Three work centers face stochastic period-by-period workloads. A limited pool of flex workers can be allocated across centers before each workload realization.
+
+State:
+
+```text
+period + center backlogs + expected center workloads
+```
+
+Action:
+
+```text
+one feasible allocation of the flex-worker pool across 3 centers
+```
+
+Compared methods:
+
+- no-flex policy;
+- one-step expected-cost allocation baseline;
+- PPO actor-critic.
+
+Reported metrics:
+
+- mean cost;
+- p90 cost;
+- average flex workers used;
+- final backlog.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/workforce_ppo.py
+```
+
+See [`docs/neural_rl_ie.md`](docs/neural_rl_ie.md) for the Phase 2 methodology and limitations.
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -182,6 +249,34 @@ The offline learner was fitted from `14,400` logged transitions. It improves mod
 
 These values are reproducible consequences of the declared synthetic models, seeds, costs, and horizons. They are not real-world savings claims.
 
+## Phase 2 GitHub Actions smoke results
+
+GitHub Actions run `35431042413` completed successfully with **16 passing tests** and both neural end-to-end smoke experiments.
+
+Regime-switching inventory:
+
+```text
+method                  mean cost    p90 cost   fill rate    stockout
+Exact regime-DP            161.734     190.310      0.9735      0.0845
+Regime base-stock          218.385     249.155      1.0000      0.0000
+DQN                        185.969     239.135      0.8928      0.2343
+```
+
+The exact Bellman value from the declared initial state is `162.440`. The short CI DQN training run improves modeled mean cost relative to the conservative regime base-stock baseline, but remains materially worse than exact DP and shows weaker service metrics. This is a smoke-validation result, not a tuned DQN benchmark.
+
+Dynamic workforce allocation:
+
+```text
+method                    mean cost    p90 cost   mean flex   final backlog
+No flex workers             1627.612    2116.200       0.000         41.212
+Myopic expected-cost         283.804     465.300       2.833          3.664
+PPO                          483.308     830.100       3.000         10.380
+```
+
+The short CI PPO run learns a policy that is far better than doing nothing, but it does **not** beat the explicit expected-cost allocation rule. The result is intentionally retained: neural RL does not receive a positive conclusion simply because it trains successfully.
+
+These Phase 2 numbers validate the full neural training/inference/evaluation mechanics under a deliberately small CI budget. They are not presented as converged algorithm rankings or real industrial savings.
+
 ## Repository structure
 
 ```text
@@ -190,14 +285,20 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── inventory.py
 │   ├── q_learning.py
 │   ├── constrained_capacity.py
-│   └── offline.py
+│   ├── offline.py
+│   ├── dqn_inventory.py
+│   ├── neural_common.py
+│   └── ppo_workforce.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
-│   └── offline_inventory.py
+│   ├── offline_inventory.py
+│   ├── neural_inventory_dqn.py
+│   └── workforce_ppo.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
+│   ├── neural_rl_ie.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml

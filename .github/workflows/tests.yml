@@ -7,7 +7,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v5
@@ -20,7 +20,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          pip install -e ".[neural]"
 
       - name: Compile package
         run: python -m compileall -q industrial_rl experiments tests
@@ -36,3 +36,9 @@ jobs:
 
       - name: Offline-RL benchmark smoke
         run: python experiments/offline_inventory.py
+
+      - name: DQN inventory smoke
+        run: python experiments/neural_inventory_dqn.py --smoke
+
+      - name: PPO workforce smoke
+        run: python experiments/workforce_ppo.py --smoke

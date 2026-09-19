@@ -12,12 +12,17 @@ The first release emphasizes transparent small-state benchmarks. Future addition
 - offline behavior cloning;
 - pessimistic tabular fitted-Q learning.
 
-## Phase 2 — function approximation
+## Phase 2 — function approximation (in progress)
 
-- DQN for larger discrete inventory state spaces;
-- PPO for dynamic discrete decision systems;
+Implemented:
+
+- DQN for regime-switching inventory with a neural Q-network, replay buffer, target network, and feasibility masking;
+- PPO for dynamic flex-workforce allocation across three work centers.
+
+Remaining:
+
 - SAC for continuous production/energy decisions;
-- neural policies with action masking where feasibility is state-dependent.
+- larger masked-action neural scheduling/resource-allocation benchmarks.
 
 Every neural benchmark should retain an exact or optimization reference on a smaller validation regime.
 
