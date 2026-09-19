@@ -837,6 +837,7 @@ class ConservativeDispatchDQN:
             lr=config.learning_rate,
         )
         self.rng = np.random.default_rng(config.seed)
+        self.reward_scale = 1.0
 
     def fit(
         self,
@@ -1089,6 +1090,11 @@ class NeuralDispatchFQE:
             [row.reward for row in dataset],
             dtype=np.float32,
         )
+        self.reward_scale = max(
+            float(np.mean(np.abs(rewards))),
+            1.0,
+        )
+        rewards = rewards / self.reward_scale
         next_states = np.asarray(
             [row.next_state for row in dataset],
             dtype=np.float32,
@@ -1218,4 +1224,5 @@ class NeuralDispatchFQE:
             ).squeeze(1)
         return float(
             -q.mean().item()
+            * self.reward_scale
         )
