@@ -837,7 +837,6 @@ class ConservativeDispatchDQN:
             lr=config.learning_rate,
         )
         self.rng = np.random.default_rng(config.seed)
-        self.reward_scale = 1.0
 
     def fit(
         self,
