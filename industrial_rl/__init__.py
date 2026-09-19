@@ -90,6 +90,7 @@ __all__ = [
     "dataset_coverage",
     "discrete_state_id",
     "generate_regime_inventory_logs",
+    "support_guardrail_policy",
     "tabular_fqe",
     "unsupported_policy_action_rate",
 ]
@@ -149,6 +150,7 @@ from .offline_neural_inventory import (
     dataset_coverage,
     discrete_state_id,
     generate_regime_inventory_logs,
+    support_guardrail_policy,
     tabular_fqe,
     unsupported_policy_action_rate,
 )
