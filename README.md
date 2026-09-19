@@ -142,6 +142,73 @@ Run:
 python experiments/offline_inventory.py
 ```
 
+### 4. Regime-switching inventory with DQN
+
+This benchmark moves from tabular Q-learning to neural function approximation while retaining an exact reference.
+
+State:
+
+```text
+(period, inventory, observed demand regime)
+```
+
+Action:
+
+```text
+discrete order quantity
+```
+
+Compared methods:
+
+- exact regime-aware dynamic programming;
+- regime-aware base-stock policy;
+- DQN with replay, target network, and feasibility masking.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/neural_inventory_dqn.py
+```
+
+### 5. Dynamic workforce allocation with PPO
+
+Three work centers face stochastic period-by-period workloads. A limited pool of flex workers can be allocated across centers before each workload realization.
+
+State:
+
+```text
+period + center backlogs + expected center workloads
+```
+
+Action:
+
+```text
+one feasible allocation of the flex-worker pool across 3 centers
+```
+
+Compared methods:
+
+- no-flex policy;
+- one-step expected-cost allocation baseline;
+- PPO actor-critic.
+
+Reported metrics:
+
+- mean cost;
+- p90 cost;
+- average flex workers used;
+- final backlog.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/workforce_ppo.py
+```
+
+See [`docs/neural_rl_ie.md`](docs/neural_rl_ie.md) for the Phase 2 methodology and limitations.
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -190,14 +257,20 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── inventory.py
 │   ├── q_learning.py
 │   ├── constrained_capacity.py
-│   └── offline.py
+│   ├── offline.py
+│   ├── dqn_inventory.py
+│   ├── neural_common.py
+│   └── ppo_workforce.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
-│   └── offline_inventory.py
+│   ├── offline_inventory.py
+│   ├── neural_inventory_dqn.py
+│   └── workforce_ppo.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
+│   ├── neural_rl_ie.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
