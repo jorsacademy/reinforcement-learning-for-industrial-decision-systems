@@ -17,12 +17,13 @@ The first release emphasizes transparent small-state benchmarks. Future addition
 Implemented:
 
 - DQN for regime-switching inventory with a neural Q-network, replay buffer, target network, and feasibility masking;
-- PPO for dynamic flex-workforce allocation across three work centers.
+- PPO for dynamic flex-workforce allocation across three work centers;
+- SAC for continuous energy-aware production-rate decisions, compared with myopic dispatch and rolling-horizon grid MPC.
 
 Remaining:
 
-- SAC for continuous production/energy decisions;
-- larger masked-action neural scheduling/resource-allocation benchmarks.
+- larger masked-action neural scheduling/resource-allocation benchmarks;
+- multi-seed neural benchmark campaigns beyond CI smoke budgets.
 
 Every neural benchmark should retain an exact or optimization reference on a smaller validation regime.
 
