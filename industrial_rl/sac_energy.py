@@ -204,10 +204,11 @@ def evaluate_energy_policy(
         total_ramp = 0.0
         while not done:
             action = float(policy(obs))
+            previous_rate = env.previous_rate
             obs, reward, done, info = env.step(action)
             total_cost += -reward
             total_energy += info["energy_use"]
-            total_ramp += abs(info["production_rate"] - env.previous_rate)
+            total_ramp += abs(info["production_rate"] - previous_rate)
         costs.append(total_cost)
         energy.append(total_energy)
         final_backlog.append(max(-env.inventory, 0.0))
