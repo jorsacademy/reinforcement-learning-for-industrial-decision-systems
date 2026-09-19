@@ -7,7 +7,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     steps:
       - uses: actions/checkout@v5
@@ -45,3 +45,6 @@ jobs:
 
       - name: SAC energy-production smoke
         run: python experiments/energy_production_sac.py --smoke
+
+      - name: Safe workforce CMDP smoke
+        run: python experiments/safe_workforce_ppo.py --smoke
