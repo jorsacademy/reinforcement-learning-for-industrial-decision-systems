@@ -425,18 +425,8 @@ def evaluate_scheduling_policy(
     }
 
 
-def historical_contextual_action(
-    env: DynamicDispatchEnv,
-    rng: np.random.Generator,
-    *,
-    exploration: float = 0.18,
-) -> int:
-    """Noisy state-dependent planner used to generate historical logs."""
-    if not 0.0 <= exploration <= 1.0:
-        raise ValueError("exploration must be in [0,1]")
-    if rng.random() < exploration:
-        return int(rng.integers(0, env.n_actions))
-
+def contextual_dispatch_policy(env: DynamicDispatchEnv) -> int:
+    """Deterministic state-dependent historical planner."""
     state = env.state_vector()
     overdue_ratio = float(state[4])
     same_family_ratio = float(state[5])
@@ -455,6 +445,20 @@ def historical_contextual_action(
     if min_slack_scaled <= 0.12:
         return EDD
     return SPT
+
+
+def historical_contextual_action(
+    env: DynamicDispatchEnv,
+    rng: np.random.Generator,
+    *,
+    exploration: float = 0.18,
+) -> int:
+    """Noisy state-dependent planner used to generate historical logs."""
+    if not 0.0 <= exploration <= 1.0:
+        raise ValueError("exploration must be in [0,1]")
+    if rng.random() < exploration:
+        return int(rng.integers(0, env.n_actions))
+    return contextual_dispatch_policy(env)
 
 
 def generate_scheduling_dataset(
