@@ -73,7 +73,7 @@ class RiskInventoryEnv:
 
     @property
     def state_dim(self) -> int:
-        return 3
+        return 2
 
     def feasible_actions(self, inventory: int | None = None) -> np.ndarray:
         inv = self.inventory if inventory is None else int(inventory)
@@ -85,7 +85,6 @@ class RiskInventoryEnv:
             [
                 self.t / self.config.horizon,
                 self.inventory / self.config.max_inventory,
-                self.previous_demand / self.config.max_demand,
             ],
             dtype=np.float32,
         )
@@ -604,7 +603,6 @@ class TailWeightedPPOAgent:
                 [
                     t / config.horizon,
                     inventory / config.max_inventory,
-                    0.0,
                 ],
                 dtype=np.float32,
             )
