@@ -242,6 +242,43 @@ python experiments/energy_production_sac.py
 
 This is an operations-planning benchmark, not low-level actuator/process control. See [`docs/energy_aware_production.md`](docs/energy_aware_production.md).
 
+### 7. Service-constrained workforce allocation with primal-dual PPO
+
+This benchmark upgrades workforce allocation from unconstrained reward optimization to a constrained Markov decision process (CMDP).
+
+Economic objective:
+
+```text
+minimize flex-labor cost
++ soft backlog cost
++ overflow cost
+```
+
+Separate service constraint:
+
+```text
+constraint_cost = 1
+when any work-center backlog exceeds the declared service threshold
+```
+
+Compared methods:
+
+- no flex workers;
+- constrained expected-workload allocation;
+- primal-dual PPO with separate reward and constraint critics;
+- the same learned PPO policy behind an expected-backlog safety shield.
+
+The Lagrange multiplier is updated from observed constraint returns rather than being a fixed reward-penalty coefficient. Safety-shield interventions are reported separately so shield quality is not confused with policy quality.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/safe_workforce_ppo.py
+```
+
+See [`docs/constrained_safe_rl.md`](docs/constrained_safe_rl.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -339,19 +376,22 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── dqn_inventory.py
 │   ├── neural_common.py
 │   ├── ppo_workforce.py
-│   └── sac_energy.py
+│   ├── sac_energy.py
+│   └── safe_workforce.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
 │   ├── offline_inventory.py
 │   ├── neural_inventory_dqn.py
 │   ├── workforce_ppo.py
-│   └── energy_production_sac.py
+│   ├── energy_production_sac.py
+│   └── safe_workforce_ppo.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
 │   ├── neural_rl_ie.md
 │   ├── energy_aware_production.md
+│   ├── constrained_safe_rl.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
