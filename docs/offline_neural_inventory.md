@@ -39,7 +39,9 @@ The benchmark reports:
 
 The unsupported-action rate measures how often a policy chooses an action that was never observed at the same discrete state in the logged dataset.
 
-This is a support diagnostic, not a proof of safe deployment.
+A deployment guardrail is also evaluated: if a learned policy proposes an unsupported action, or reaches a state absent from the log, control falls back to the known behavior policy. The guardrail is reported separately so its contribution is not credited to CQL/IQL themselves.
+
+This is a support diagnostic and fallback mechanism, not a proof of safe deployment.
 
 ## Neural Behavior Cloning
 
@@ -71,7 +73,7 @@ This permits policy improvement without explicit maximization over out-of-datase
 
 Before simulator testing, every policy receives a tabular fitted-Q-evaluation estimate using only the fixed dataset.
 
-The FQE estimate must be interpreted together with action support. A policy with a high unsupported-action rate can have a misleading FQE value because the log does not identify its counterfactual consequences.
+The FQE estimate must be interpreted together with action support. In the benchmark output, FQE is suppressed when more than 5% of visited logged states would use an unsupported action, because the tabular log cannot identify those counterfactual consequences reliably.
 
 ## Model-advantaged reference
 
