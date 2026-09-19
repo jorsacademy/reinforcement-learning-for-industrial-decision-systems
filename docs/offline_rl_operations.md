@@ -71,6 +71,14 @@ The conservative term pushes down values for actions that the network might othe
 
 This compact implementation is described as **CQL-style** rather than as a reproduction of every Conservative Q-Learning variant or benchmark protocol.
 
+## Action-support guardrail
+
+The benchmark also evaluates a deployment guard around the neural offline policy.
+
+When the learned policy proposes an action that was not observed often enough at a logged state, the guard substitutes a supported feasible action. If the state itself has no logged support, it falls back to the historical behavior policy.
+
+The intervention rate is reported explicitly. A strong guarded result therefore cannot be attributed to the learned policy alone.
+
 ## Fitted Q Evaluation
 
 Before simulator testing, each frozen target policy is evaluated using Fitted Q Evaluation (FQE) on the logged transition table.
