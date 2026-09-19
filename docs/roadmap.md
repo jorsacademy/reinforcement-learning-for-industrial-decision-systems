@@ -103,7 +103,7 @@ Remaining:
 - due dates and weighted tardiness;
 - sequence-dependent setup/changeover time;
 - fixed dispatch-rule action space;
-- ATC-heavy historical behavior logs;
+- state-dependent noisy historical dispatch logs;
 - neural behavior cloning;
 - conservative offline CQL-style dispatch-rule selection;
 - two-step current-information scheduling lookahead baseline;
