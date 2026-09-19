@@ -304,6 +304,39 @@ python experiments/risk_aware_inventory.py
 
 See [`docs/risk_aware_inventory.md`](docs/risk_aware_inventory.md).
 
+### 9. Predictive maintenance under partial observability
+
+This benchmark adds a fourth core Industrial Engineering domain: maintenance and reliability.
+
+The true equipment condition is hidden:
+
+```text
+Healthy -> Degraded -> Critical -> Failed
+```
+
+The planner receives only noisy condition signals and maintains a Bayesian posterior belief over health states.
+
+Compared methods:
+
+- always operate / run-to-failure-style sanity baseline;
+- reactive sensor rule;
+- posterior belief-threshold maintenance rule;
+- discretized belief-state dynamic programming;
+- belief-state DQN.
+
+The DQN input contains the posterior belief and time only. The hidden health state is used by the simulator and evaluator but is never exposed to the policy.
+
+The belief-DP reference is approximate because the continuous probability simplex is discretized.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/pomdp_maintenance.py
+```
+
+See [`docs/pomdp_maintenance.md`](docs/pomdp_maintenance.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -444,7 +477,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── ppo_workforce.py
 │   ├── sac_energy.py
 │   ├── safe_workforce.py
-│   └── risk_inventory.py
+│   ├── risk_inventory.py
+│   └── pomdp_maintenance.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -453,7 +487,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── workforce_ppo.py
 │   ├── energy_production_sac.py
 │   ├── safe_workforce_ppo.py
-│   └── risk_aware_inventory.py
+│   ├── risk_aware_inventory.py
+│   └── pomdp_maintenance.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -461,6 +496,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── energy_aware_production.md
 │   ├── constrained_safe_rl.md
 │   ├── risk_aware_inventory.md
+│   ├── pomdp_maintenance.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
