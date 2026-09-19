@@ -555,6 +555,10 @@ class ActionSupportGuard:
             return fallback
         return int(feasible[-1])
 
+    def reset_stats(self) -> None:
+        self.decisions = 0
+        self.interventions = 0
+
     @property
     def intervention_rate(self) -> float:
         return float(
