@@ -18,6 +18,7 @@ from industrial_rl.offline_neural_inventory import (
     OfflineBCConfig,
     dataset_coverage,
     generate_regime_inventory_logs,
+    support_guardrail_policy,
     tabular_fqe,
     unsupported_policy_action_rate,
 )
@@ -80,11 +81,25 @@ def main():
     ).fit(dataset)
 
     _, dp_table = exact_regime_inventory_dp(config)
+    raw_bc = bc.policy()
+    raw_cql = cql.policy()
+    raw_iql = iql.policy()
+
     methods = {
         "Behavior policy": behavior,
-        "Neural BC": bc.policy(),
-        "Discrete CQL": cql.policy(),
-        "Discrete IQL": iql.policy(),
+        "Neural BC": raw_bc,
+        "Discrete CQL": raw_cql,
+        "CQL + support guard": support_guardrail_policy(
+            dataset,
+            raw_cql,
+            behavior,
+        ),
+        "Discrete IQL": raw_iql,
+        "IQL + support guard": support_guardrail_policy(
+            dataset,
+            raw_iql,
+            behavior,
+        ),
         "Exact DP reference": regime_table_policy(dp_table),
     }
 
@@ -116,11 +131,15 @@ def main():
             dataset,
             policy,
         )
-        fqe = tabular_fqe(
-            dataset,
-            policy,
-            config,
-            iterations=60,
+        fqe = (
+            tabular_fqe(
+                dataset,
+                policy,
+                config,
+                iterations=60,
+            )
+            if unsupported <= 0.05
+            else float("nan")
         )
         print(
             f"{name:<21}"
