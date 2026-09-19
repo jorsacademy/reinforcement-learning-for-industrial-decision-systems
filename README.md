@@ -337,6 +337,40 @@ python experiments/pomdp_maintenance.py
 
 See [`docs/pomdp_maintenance.md`](docs/pomdp_maintenance.md).
 
+### 10. Offline RL from historical inventory decisions
+
+This benchmark strengthens the original offline inventory example into a modern offline decision-learning workflow.
+
+Training data:
+
+```text
+logged state
++ historical action
++ realized reward
++ next state
+```
+
+The learner is not allowed to call the simulator during fitting.
+
+Compared methods:
+
+- historical behavior policy;
+- tabular behavior cloning;
+- pessimistic tabular fitted-Q iteration;
+- neural CQL-style conservative offline DQN;
+- exact DP as a model-advantaged reference.
+
+Before simulator validation, each frozen policy is screened with Fitted Q Evaluation (FQE) using only the logged transition table. Dataset state coverage, state-action coverage, and target-policy action support are also reported.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/offline_inventory_cql.py
+```
+
+See [`docs/offline_rl_operations.md`](docs/offline_rl_operations.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -499,7 +533,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── sac_energy.py
 │   ├── safe_workforce.py
 │   ├── risk_inventory.py
-│   └── pomdp_maintenance.py
+│   ├── pomdp_maintenance.py
+│   └── offline_neural.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -509,7 +544,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── energy_production_sac.py
 │   ├── safe_workforce_ppo.py
 │   ├── risk_aware_inventory.py
-│   └── pomdp_maintenance.py
+│   ├── pomdp_maintenance.py
+│   └── offline_inventory_cql.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -518,6 +554,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── constrained_safe_rl.md
 │   ├── risk_aware_inventory.md
 │   ├── pomdp_maintenance.md
+│   ├── offline_rl_operations.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
