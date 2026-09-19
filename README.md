@@ -409,6 +409,27 @@ The episode-level probability of at least one violation remains high even for th
 
 The original 1.5-period budget was tested first and rejected because none of the benchmarked policies could satisfy it under the declared stochastic workload and flex-capacity assumptions. The 4.0-period budget is therefore documented as a feasibility-calibrated synthetic benchmark parameter, not an externally validated service target.
 
+## Risk-aware inventory GitHub Actions smoke result
+
+GitHub Actions run `35433247241` completed successfully with **28 passing tests** and the complete benchmark suite.
+
+Rare-surge inventory:
+
+```text
+method                    mean       p90       p95    CVaR90      fill   stockout
+Risk-neutral DP         121.690   169.390   187.715   194.770    0.9546    0.0622
+Mean base-stock(7)      122.253   178.145   203.858   204.638    0.9400    0.0697
+CVaR base-stock(14)     148.324   166.355   174.512   176.510    0.9952    0.0133
+Mean PPO                165.822   238.050   278.782   286.105    0.7997    0.3708
+Tail-weighted PPO       215.791   227.365   229.755   231.252    0.9994    0.0025
+```
+
+The common-random-number base-stock search selected materially different targets: `7` for mean cost and `14` for empirical CVaR90. The CVaR-selected policy pays a higher average cost but lowers the held-out CVaR90 from `204.638` to `176.510`, while also reducing stockout-period frequency.
+
+The short tail-weighted PPO run improves CVaR90 relative to mean-focused PPO (`231.252` versus `286.105`) and almost eliminates stockouts, but it does so with substantially higher mean cost and remains inferior to the simple CVaR-selected base-stock policy on tail cost. This negative comparison is retained: neural tail emphasis is not automatically superior to a transparent risk-aware operations rule.
+
+The exact DP reference minimizes expected cost for the declared finite model; it is not labeled CVaR-optimal.
+
 ## Repository structure
 
 ```text
