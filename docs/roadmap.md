@@ -27,12 +27,22 @@ Future neural expansion:
 
 Every neural benchmark should retain an exact or optimization reference on a smaller validation regime.
 
-## Phase 3 — constrained and safe RL
+## Phase 3 — constrained and safe RL (in progress)
 
-- primal-dual/Lagrangian policy optimization;
-- explicit cost critics;
-- chance-constraint or CVaR-aware evaluation;
-- safety shields or optimization-based action repair.
+Implemented:
+
+- CMDP formulation for stochastic flex-workforce allocation;
+- explicit reward critic and constraint critic;
+- primal-dual / Lagrangian PPO with projected dual updates;
+- expected service-violation budget reported separately from economic reward;
+- safety shield / action repair based on expected next-period backlog;
+- shield intervention rate reported separately from raw policy quality.
+
+Remaining:
+
+- chance-constrained or CVaR-aware evaluation;
+- continuous-action constrained RL for production/energy systems;
+- stronger statistical validation of constraint satisfaction across training seeds.
 
 ## Phase 4 — offline RL
 
