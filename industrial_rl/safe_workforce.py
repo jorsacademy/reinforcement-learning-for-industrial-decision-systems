@@ -16,7 +16,7 @@ from .ppo_workforce import WorkforceConfig, WorkforceEnv, workforce_allocations
 class SafeWorkforceConfig:
     workforce: WorkforceConfig = WorkforceConfig()
     service_backlog_limit: int = 4
-    expected_violation_budget: float = 1.5
+    expected_violation_budget: float = 4.0
     soft_backlog_cost: float = 0.20
 
     def validate(self) -> None:
