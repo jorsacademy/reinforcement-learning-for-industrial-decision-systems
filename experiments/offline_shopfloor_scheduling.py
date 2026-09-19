@@ -95,8 +95,9 @@ def main():
 
         fqe = NeuralDispatchFQE(
             config=DispatchFQEConfig(
-                gradient_steps=450 if args.smoke else 2200,
+                gradient_steps=1200 if args.smoke else 3200,
                 batch_size=128,
+                target_update=100,
                 seed=900 + i,
             )
         ).fit(
