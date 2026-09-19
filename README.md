@@ -358,9 +358,10 @@ Compared methods:
 - tabular behavior cloning;
 - pessimistic tabular fitted-Q iteration;
 - neural CQL-style conservative offline DQN;
+- the same CQL-style policy behind a logged-action support guardrail;
 - exact DP as a model-advantaged reference.
 
-Before simulator validation, each frozen policy is screened with Fitted Q Evaluation (FQE) using only the logged transition table. Dataset state coverage, state-action coverage, and target-policy action support are also reported.
+Before simulator validation, each frozen policy is screened with Fitted Q Evaluation (FQE) using only the logged transition table. Dataset state coverage, state-action coverage, target-policy action support, and support-guard intervention rate are also reported.
 
 Run:
 
