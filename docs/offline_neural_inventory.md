@@ -39,7 +39,7 @@ The benchmark reports:
 
 The unsupported-action rate measures how often a policy chooses an action that was never observed at the same discrete state in the logged dataset.
 
-A deployment guardrail is also evaluated: if a learned policy proposes an unsupported action, or reaches a state absent from the log, control falls back to the known behavior policy. The guardrail is reported separately so its contribution is not credited to CQL/IQL themselves.
+A deployment guardrail is also evaluated. At a visited state, an unsupported learned action first falls back to the known behavior policy; if that nominal behavior action was itself never logged at that exact state, the guardrail uses the most frequently observed logged action there. At a state absent from the log, it falls back to the behavior policy. The guardrail is reported separately so its contribution is not credited to CQL/IQL themselves.
 
 This is a support diagnostic and fallback mechanism, not a proof of safe deployment.
 
