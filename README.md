@@ -304,6 +304,39 @@ python experiments/risk_aware_inventory.py
 
 See [`docs/risk_aware_inventory.md`](docs/risk_aware_inventory.md).
 
+### 9. Predictive maintenance under partial observability
+
+This benchmark adds a fourth core Industrial Engineering domain: maintenance and reliability.
+
+The true equipment condition is hidden:
+
+```text
+Healthy -> Degraded -> Critical -> Failed
+```
+
+The planner receives only noisy condition signals and maintains a Bayesian posterior belief over health states.
+
+Compared methods:
+
+- always operate / run-to-failure-style sanity baseline;
+- reactive sensor rule;
+- posterior belief-threshold maintenance rule;
+- discretized belief-state dynamic programming;
+- belief-state DQN.
+
+The DQN input contains the posterior belief and time only. The hidden health state is used by the simulator and evaluator but is never exposed to the policy.
+
+The belief-DP reference is approximate because the continuous probability simplex is discretized.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/pomdp_maintenance.py
+```
+
+See [`docs/pomdp_maintenance.md`](docs/pomdp_maintenance.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -430,6 +463,27 @@ The short tail-weighted PPO run improves CVaR90 relative to mean-focused PPO (`2
 
 The exact DP reference minimizes expected cost for the declared finite model; it is not labeled CVaR-optimal.
 
+## POMDP maintenance GitHub Actions smoke result
+
+GitHub Actions run `35433668974` completed successfully with **34 passing tests** and the complete benchmark suite.
+
+Partially observable maintenance:
+
+```text
+method                    mean cost   p90 cost  fail rate   replace     minor   entropy
+Always operate             1405.520   2925.800     0.3680    0.0000    0.0000    0.3122
+Reactive sensor             208.987    383.200     0.0033    0.0531    0.1760    0.3051
+Belief threshold            188.757    369.000     0.0040    0.0231    0.2182    0.3411
+Belief-DP grid(6)           180.270    375.200     0.0049    0.0098    0.2360    0.3553
+Belief DQN                  191.010    424.000     0.0082    0.0142    0.1762    0.4028
+```
+
+The smoke configuration used an 84-point discretized belief simplex over a 15-period horizon. The model-based belief-DP approximation produced the lowest mean cost, while the simple posterior-threshold rule had a slightly lower p90 cost.
+
+Belief-state DQN improves mean cost substantially relative to the raw reactive-sensor rule, but it does **not** outperform either the transparent belief-threshold policy or the discretized belief-DP reference. Its held-out p90 cost and failure-period exposure are also worse than those two belief-based baselines.
+
+The result supports the modeling value of Bayesian information aggregation, not an automatic advantage for neural RL. The belief-DP benchmark remains explicitly approximate because the continuous belief simplex is projected onto a finite grid.
+
 ## Repository structure
 
 ```text
@@ -444,7 +498,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── ppo_workforce.py
 │   ├── sac_energy.py
 │   ├── safe_workforce.py
-│   └── risk_inventory.py
+│   ├── risk_inventory.py
+│   └── pomdp_maintenance.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -453,7 +508,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── workforce_ppo.py
 │   ├── energy_production_sac.py
 │   ├── safe_workforce_ppo.py
-│   └── risk_aware_inventory.py
+│   ├── risk_aware_inventory.py
+│   └── pomdp_maintenance.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -461,6 +517,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── energy_aware_production.md
 │   ├── constrained_safe_rl.md
 │   ├── risk_aware_inventory.md
+│   ├── pomdp_maintenance.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
