@@ -119,6 +119,31 @@ class OfflineNeuralTests(unittest.TestCase):
             np.isfinite(estimate)
         )
 
+    def test_support_guard_replaces_unsupported_action(self):
+        from industrial_rl import InventoryEnv
+        from industrial_rl.offline_neural import ActionSupportGuard
+
+        env = InventoryEnv(self.config)
+
+        def unsupported_policy(t, inventory):
+            del t
+            feasible = env.feasible_actions(inventory)
+            return int(feasible[-1])
+
+        guard = ActionSupportGuard(
+            unsupported_policy,
+            self.behavior,
+            self.dataset,
+            env,
+            min_count=999,
+        )
+        action = guard(0, self.config.initial_inventory)
+        self.assertIn(
+            action,
+            env.feasible_actions(self.config.initial_inventory),
+        )
+        self.assertEqual(guard.interventions, 1)
+
     def test_conservative_policy_actions_are_feasible(self):
         from industrial_rl import InventoryEnv
         from industrial_rl.offline_neural import (
