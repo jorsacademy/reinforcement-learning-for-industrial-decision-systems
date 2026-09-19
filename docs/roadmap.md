@@ -78,7 +78,7 @@ Remaining:
 
 - IQL-style offline policy learning;
 - richer off-policy evaluation diagnostics;
-- offline RL on scheduling or maintenance logs;
+- offline RL on dynamic scheduling logs — implemented;
 - dataset-shift and behavior-policy sensitivity studies.
 
 ## Phase 5 — model-based and hybrid decision systems
@@ -96,3 +96,15 @@ Remaining:
 - dynamic workforce/capacity allocation;
 - rolling-horizon scheduling with stochastic arrivals;
 - hybrid RL + OR decision systems.
+
+## Dynamic scheduling from historical dispatch logs (implemented)
+
+- stochastic job arrivals;
+- due dates and weighted tardiness;
+- sequence-dependent setup/changeover time;
+- fixed dispatch-rule action space;
+- ATC-heavy historical behavior logs;
+- neural behavior cloning;
+- conservative offline CQL-style dispatch-rule selection;
+- two-step current-information scheduling lookahead baseline;
+- held-out tardiness, setup, flow-time, and on-time evaluation.
