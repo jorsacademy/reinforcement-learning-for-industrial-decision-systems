@@ -182,22 +182,38 @@ def support_guardrail_policy(
     At unseen states, or when the candidate chooses an unsupported action at a
     visited state, deployment falls back to the known behavior policy.
     """
-    observed: dict[tuple[int, int, int], set[int]] = {}
+    observed: dict[tuple[int, int, int], dict[int, int]] = {}
     for row in dataset:
-        observed.setdefault(
-            (row.t, row.inventory, row.regime),
-            set(),
-        ).add(row.action)
+        key = (row.t, row.inventory, row.regime)
+        counts = observed.setdefault(key, {})
+        counts[row.action] = counts.get(row.action, 0) + 1
 
     def choose(t: int, inventory: int, regime: int) -> int:
         key = (int(t), int(inventory), int(regime))
         candidate = int(
             candidate_policy(t, inventory, regime)
         )
-        if key in observed and candidate in observed[key]:
+
+        if key not in observed:
+            return int(
+                fallback_policy(t, inventory, regime)
+            )
+
+        counts = observed[key]
+        if candidate in counts:
             return candidate
-        return int(
+
+        fallback = int(
             fallback_policy(t, inventory, regime)
+        )
+        if fallback in counts:
+            return fallback
+
+        return int(
+            max(
+                counts,
+                key=lambda action: (counts[action], -action),
+            )
         )
 
     return choose
