@@ -29,7 +29,7 @@ This fixed action space is suitable for historical dispatch logs and avoids an u
 
 ## Historical behavior
 
-The synthetic historical log is ATC-heavy, with smaller probabilities assigned to EDD, setup-aware, and SPT decisions.
+The synthetic historical log comes from a state-dependent planner: urgent/overdue queues favor ATC, strong same-family opportunities favor setup-aware dispatch, tight slack favors EDD, and otherwise SPT is used. Limited random exploration adds imperfect historical coverage.
 
 The dataset records:
 
@@ -41,7 +41,7 @@ state features
 + terminal flag
 ```
 
-Offline behavior cloning and a conservative CQL-style neural Q learner are fitted only to this table.
+Offline behavior cloning and a conservative CQL-style neural Q learner are fitted only to this table. The deterministic contextual planner is also evaluated as the historical-policy reference.
 
 ## Industrial objective
 
