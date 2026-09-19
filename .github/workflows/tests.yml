@@ -7,7 +7,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
 
     steps:
       - uses: actions/checkout@v5
@@ -48,3 +48,6 @@ jobs:
 
       - name: Safe workforce CMDP smoke
         run: python experiments/safe_workforce_ppo.py --smoke
+
+      - name: Risk-aware inventory smoke
+        run: python experiments/risk_aware_inventory.py --smoke
