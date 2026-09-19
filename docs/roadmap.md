@@ -50,6 +50,18 @@ Remaining:
 - continuous-action constrained RL for production/energy systems;
 - stronger statistical validation of constraint satisfaction across training seeds.
 
+## Partial observability / maintenance benchmark (implemented)
+
+- hidden four-state equipment degradation model;
+- noisy categorical condition sensor;
+- exact Bayesian belief filtering;
+- reactive sensor and posterior-threshold maintenance rules;
+- discretized finite-horizon belief-state dynamic programming;
+- belief-state DQN that never receives hidden health labels;
+- held-out cost, failure exposure, intervention-rate, and belief-entropy evaluation.
+
+This extends the separate fully observed maintenance MDP project rather than duplicating it.
+
 ## Phase 4 — offline RL
 
 - CQL;
@@ -68,7 +80,7 @@ Remaining:
 ## Planned industrial benchmark families
 
 - multi-echelon inventory;
-- predictive maintenance with partial observability;
+- predictive maintenance with partial observability — implemented;
 - energy-aware production;
 - dynamic workforce/capacity allocation;
 - rolling-horizon scheduling with stochastic arrivals;
