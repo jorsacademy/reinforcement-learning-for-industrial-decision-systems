@@ -87,6 +87,20 @@ __all__ = [
     "TabularFQE",
     "inventory_state_features",
     "offline_dataset_diagnostics",
+    "ATC",
+    "EDD",
+    "SETUP_AWARE",
+    "SPT",
+    "DynamicDispatchEnv",
+    "OfflineSchedulingCQL",
+    "SchedulingCQLConfig",
+    "SchedulingConfig",
+    "SchedulingTransition",
+    "evaluate_scheduling_policy",
+    "fit_behavior_cloner",
+    "fixed_rule_policy",
+    "generate_scheduling_dataset",
+    "lookahead_policy",
 ]
 
 from .safe_workforce import (
@@ -141,4 +155,21 @@ from .offline_neural import (
     TabularFQE,
     inventory_state_features,
     offline_dataset_diagnostics,
+)
+
+from .offline_scheduling import (
+    ATC,
+    EDD,
+    SETUP_AWARE,
+    SPT,
+    DynamicDispatchEnv,
+    OfflineSchedulingCQL,
+    SchedulingCQLConfig,
+    SchedulingConfig,
+    SchedulingTransition,
+    evaluate_scheduling_policy,
+    fit_behavior_cloner,
+    fixed_rule_policy,
+    generate_scheduling_dataset,
+    lookahead_policy,
 )
