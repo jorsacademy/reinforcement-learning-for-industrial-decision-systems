@@ -7,7 +7,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
 
     steps:
       - uses: actions/checkout@v5
@@ -54,3 +54,6 @@ jobs:
 
       - name: POMDP maintenance smoke
         run: python experiments/pomdp_maintenance.py --smoke
+
+      - name: Offline CQL-style inventory smoke
+        run: python experiments/offline_inventory_cql.py --smoke

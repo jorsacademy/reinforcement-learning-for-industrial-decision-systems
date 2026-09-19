@@ -80,6 +80,13 @@ __all__ = [
     "discretized_belief_policy",
     "evaluate_maintenance_policy",
     "reactive_sensor_policy",
+    "ActionSupportGuard",
+    "ConservativeOfflineConfig",
+    "ConservativeOfflineDQN",
+    "FQEConfig",
+    "TabularFQE",
+    "inventory_state_features",
+    "offline_dataset_diagnostics",
 ]
 
 from .safe_workforce import (
@@ -124,4 +131,14 @@ from .pomdp_maintenance import (
     discretized_belief_policy,
     evaluate_maintenance_policy,
     reactive_sensor_policy,
+)
+
+from .offline_neural import (
+    ActionSupportGuard,
+    ConservativeOfflineConfig,
+    ConservativeOfflineDQN,
+    FQEConfig,
+    TabularFQE,
+    inventory_state_features,
+    offline_dataset_diagnostics,
 )

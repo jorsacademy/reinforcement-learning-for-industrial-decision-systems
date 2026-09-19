@@ -337,6 +337,41 @@ python experiments/pomdp_maintenance.py
 
 See [`docs/pomdp_maintenance.md`](docs/pomdp_maintenance.md).
 
+### 10. Offline RL from historical inventory decisions
+
+This benchmark strengthens the original offline inventory example into a modern offline decision-learning workflow.
+
+Training data:
+
+```text
+logged state
++ historical action
++ realized reward
++ next state
+```
+
+The learner is not allowed to call the simulator during fitting.
+
+Compared methods:
+
+- historical behavior policy;
+- tabular behavior cloning;
+- pessimistic tabular fitted-Q iteration;
+- neural CQL-style conservative offline DQN;
+- the same CQL-style policy behind a logged-action support guardrail;
+- exact DP as a model-advantaged reference.
+
+Before simulator validation, each frozen policy is screened with Fitted Q Evaluation (FQE) using only the logged transition table. Dataset state coverage, state-action coverage, target-policy action support, and support-guard intervention rate are also reported.
+
+Run:
+
+```bash
+pip install -e ".[neural]"
+python experiments/offline_inventory_cql.py
+```
+
+See [`docs/offline_rl_operations.md`](docs/offline_rl_operations.md).
+
 ## Validated GitHub Actions smoke results
 
 GitHub Actions run `35430606025` completed successfully on Python 3.12. The regression suite reported **12 passing tests**, followed by all three end-to-end benchmarks.
@@ -484,6 +519,32 @@ Belief-state DQN improves mean cost substantially relative to the raw reactive-s
 
 The result supports the modeling value of Bayesian information aggregation, not an automatic advantage for neural RL. The belief-DP benchmark remains explicitly approximate because the continuous belief simplex is projected onto a finite grid.
 
+## Phase 4 offline RL GitHub Actions smoke result
+
+GitHub Actions run `35435753434` completed successfully with **39 passing tests** and the complete benchmark suite.
+
+Historical inventory-decision benchmark:
+
+```text
+method                      support    FQE cost    sim cost       p90      fill   stockout    guard
+Behavior policy               0.989     102.238     101.811   108.800    1.0000    0.0000    0.000
+Behavior cloning              1.000     102.238     101.811   108.800    1.0000    0.0000    0.000
+Pessimistic tabular FQI        1.000      72.561      91.655   106.000    0.9375    0.1233    0.000
+Conservative offline DQN       0.737      18.781      92.506   100.300    0.9836    0.0477    0.000
+CQL + support guard            1.000      95.153      96.833   104.600    0.9960    0.0110    0.205
+Exact DP reference             0.827      16.777      83.203    93.610    0.9554    0.1128    0.000
+```
+
+The logged dataset contains `8,400` transitions with state coverage `0.710` and feasible state-action coverage `0.362`.
+
+The raw conservative neural policy improves held-out simulator cost relative to the historical behavior policy, but only `73.7%` of its actions on visited states are supported by the log. FQE is therefore severely optimistic: it estimates cost `18.781` while the frozen-policy simulator cost is `92.506`.
+
+The action-support guard forces the target policy back inside logged action support where possible. Support rises to `1.000`, and the FQE estimate (`95.153`) becomes close to the held-out simulator cost (`96.833`). The guard intervenes on **20.5%** of decisions, and the guarded policy is more conservative economically than the raw neural policy.
+
+This result is retained because it captures a central offline-RL deployment issue: a policy can look strong under off-policy evaluation when its actions are weakly supported by historical operations data. Better support can improve evaluation credibility while reducing apparent policy gains.
+
+The exact-DP row is deliberately shown as a model-advantaged synthetic reference. Its low target-action support and unrealistic FQE estimate demonstrate why an excellent policy under the true model may still be impossible to validate safely from a narrow historical log.
+
 ## Repository structure
 
 ```text
@@ -499,7 +560,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── sac_energy.py
 │   ├── safe_workforce.py
 │   ├── risk_inventory.py
-│   └── pomdp_maintenance.py
+│   ├── pomdp_maintenance.py
+│   └── offline_neural.py
 ├── experiments/
 │   ├── inventory_control.py
 │   ├── constrained_capacity.py
@@ -509,7 +571,8 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── energy_production_sac.py
 │   ├── safe_workforce_ppo.py
 │   ├── risk_aware_inventory.py
-│   └── pomdp_maintenance.py
+│   ├── pomdp_maintenance.py
+│   └── offline_inventory_cql.py
 ├── docs/
 │   ├── when_to_use_rl.md
 │   ├── evaluation_protocol.md
@@ -518,6 +581,7 @@ reinforcement-learning-for-industrial-decision-systems/
 │   ├── constrained_safe_rl.md
 │   ├── risk_aware_inventory.md
 │   ├── pomdp_maintenance.md
+│   ├── offline_rl_operations.md
 │   └── roadmap.md
 ├── tests/
 ├── .github/workflows/tests.yml
