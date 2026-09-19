@@ -11,5 +11,10 @@ dependencies = [
   "numpy>=1.24",
 ]
 
+[project.optional-dependencies]
+neural = [
+  "torch>=2.2",
+]
+
 [tool.setuptools.packages.find]
 include = ["industrial_rl*"]
