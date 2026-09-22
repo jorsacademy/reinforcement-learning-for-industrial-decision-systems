@@ -41,14 +41,14 @@ jobs:
             mkdir -p "projects/$repo"
             cp -a "$tmp/repo/." "projects/$repo/"
             cat > "projects/$repo/SOURCE_REPOSITORY.md" <<EOF
-# Source repository
-
-Copied from https://github.com/jorsacademy/$repo
-
-Source commit: `$sha`
-
-The original repository remains unchanged.
-EOF
+          # Source repository
+          
+          Copied from https://github.com/jorsacademy/$repo
+          
+          Source commit: `$sha`
+          
+          The original repository remains unchanged.
+          EOF
             rm -rf "$tmp"
           done
           rm -f .github/workflows/consolidate-related-repos.yml
