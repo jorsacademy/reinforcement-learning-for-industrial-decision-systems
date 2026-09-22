@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ray-tune-distributed-policy-search"
+version = "0.1.0"
+description = "Distributed stochastic inventory policy search with Ray Tune"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26,<3",
+  "ray[tune]==2.58.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+]
+
+[project.scripts]
+ray-tune-policy-demo = "ray_policy.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=ray_policy --cov-report=term-missing --cov-fail-under=90"
+testpaths = ["tests"]

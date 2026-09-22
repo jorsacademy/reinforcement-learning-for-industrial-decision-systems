@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and tests
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[test]'
+      - name: Run unit tests
+        run: pytest
+      - name: Smoke-test offline dataset and behavior evaluation
+        run: |
+          python -m offline_process_control.data --episodes 2 --seed 123 --output data/ci_dataset.npz
+          python -m offline_process_control.evaluate --episodes 2 --seed 321 --output results/ci_eval.csv

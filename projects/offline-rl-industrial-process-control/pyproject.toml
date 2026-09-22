@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offline-rl-industrial-process-control"
+version = "0.1.0"
+description = "Offline reinforcement learning benchmark for industrial process control."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26",
+  "gymnasium>=0.29",
+  "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+rl = [
+  "torch>=2.1",
+]
+test = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,56 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build unzip curl
+
+      - name: Cache LibTorch
+        id: cache-libtorch
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/libtorch
+          key: libtorch-cpu-linux-latest-v1
+
+      - name: Download LibTorch CPU
+        if: steps.cache-libtorch.outputs.cache-hit != 'true'
+        run: |
+          cd "${{ runner.temp }}"
+          curl --fail --location --retry 3 \
+            -o libtorch.zip \
+            https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-latest.zip
+          unzip -q libtorch.zip
+          rm libtorch.zip
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="${{ runner.temp }}/libtorch"
+
+      - name: Build
+        run: cmake --build build --parallel 2
+
+      - name: CLI sanity check
+        run: ./build/train_dqn --help
+
+      - name: Runtime smoke test
+        run: ./build/train_dqn --episodes 10 --warmup-steps 128 --seed 42

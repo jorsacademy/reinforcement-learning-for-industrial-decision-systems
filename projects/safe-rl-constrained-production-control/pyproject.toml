@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safe-rl-production-control"
+version = "0.1.0"
+description = "Constrained industrial production control benchmark for safe reinforcement learning"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24,<3",
+  "gymnasium>=0.29,<2",
+]
+
+[project.optional-dependencies]
+rl = ["stable-baselines3>=2.3,<3"]
+dev = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
