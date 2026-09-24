@@ -1,4 +1,21 @@
-# Reinforcement Learning for Industrial Decision Systems
+# Industrial Reinforcement Learning
+
+<!-- portfolio-umbrella:start -->
+## Portfolio role
+
+This repository is the primary umbrella repository for this Jors Academy research area. Related projects have been consolidated under `projects/` so the methods, implementations, experiments, and case studies can be maintained and explored from one place.
+
+### Included projects
+
+- [`cpp-deep-rl-libtorch`](projects/cpp-deep-rl-libtorch/)
+- [`java-burlap-reinforcement-learning`](projects/java-burlap-reinforcement-learning/)
+- [`offline-rl-industrial-process-control`](projects/offline-rl-industrial-process-control/)
+- [`production-control-with-mpc-vs-rl`](projects/production-control-with-mpc-vs-rl/)
+- [`ray-tune-distributed-policy-search`](projects/ray-tune-distributed-policy-search/)
+- [`safe-rl-constrained-production-control`](projects/safe-rl-constrained-production-control/)
+
+Each consolidated project keeps its own files and a `SOURCE_REPOSITORY.md` provenance record. The snapshot preserves the source repository's default-branch files at consolidation time; repository-level history and metadata remain separate from the snapshot.
+<!-- portfolio-umbrella:end -->
 
 A research-oriented benchmark repository for studying **when reinforcement learning is useful in Industrial Engineering and Operations Research — and when classical optimization should remain the preferred method**.
 
